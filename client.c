@@ -12,55 +12,63 @@
 		
 void send_recv(int i, int sockfd)
 {
-	char send_buf[BUFSIZE];
-	char recv_buf[BUFSIZE];
-	int nbyte_recvd;
+	char snd_buf[BUFSIZE];
+	char rcv_buf[BUFSIZE];
+	int nbyte_rcvd;
 	
 	if (i == 0){
-		fgets(send_buf, BUFSIZE, stdin);
-		if (strcmp(send_buf , "quit\n") == 0) {
+		fgets(snd_buf, BUFSIZE, stdin);
+		if (strcmp(snd_buf , "quit\n") == 0) {
+			printf("\n");
+			printf("   **CLIENT HAS LEFT THE CHATROOM**   \n");
+			printf("---------------------------------------\n");
 			exit(0);
-		}else
-			send(sockfd, send_buf, strlen(send_buf), 0);
-	}else {
-		nbyte_recvd = recv(sockfd, recv_buf, BUFSIZE, 0);
-		recv_buf[nbyte_recvd] = '\0';
-		printf("%s\n" , recv_buf);
+		}
+		else
+			send(sockfd, snd_buf, strlen(snd_buf), 0);
+	}
+	else {
+		nbyte_rcvd = recv(sockfd, rcv_buf, BUFSIZE, 0);
+		rcv_buf[nbyte_rcvd] = '\0';
+		printf("%s\n" , rcv_buf);
 		fflush(stdout);
 	}
 }
-		
-		
-void connect_request(int *sockfd, struct sockaddr_in *server_addr)
-{
-	if ((*sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("Socket");
-		exit(1);
-	}
-	server_addr->sin_family = AF_INET;
-	server_addr->sin_port = htons(4950);
-	server_addr->sin_addr.s_addr = inet_addr("127.0.0.1");
 
-	
-	if(connect(*sockfd, (struct sockaddr *)server_addr, sizeof(struct sockaddr)) == -1) {
-		perror("connect");
+void connect_request(int *sockfd, struct sockaddr_in *servaddr)
+{
+	if ((*sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+	{
+		perror("Socket creation failed");
 		exit(1);
 	}
-}
+		printf("Socket created...\n");
 	
+	servaddr->sin_family = AF_INET;
+	servaddr->sin_port = htons(8080);
+	servaddr->sin_addr.s_addr = inet_addr("127.0.0.1");
+	memset(servaddr->sin_zero, '\0', sizeof servaddr->sin_zero);
+	
+	int c = connect(*sockfd, (struct sockaddr *)servaddr, sizeof(struct sockaddr));
+	
+	if(c < 0)
+	{
+		perror("Connection error");
+		exit(1);
+	}
+		printf("Connected to server...\n");
+		printf("---------------------------------------\n");
+		printf("   ***WELCOME TO THIS CHATROOM***   \n");
+		printf("\n");
+}
 int main()
 {
 	int sockfd, fdmax, i;
-	struct sockaddr_in server_addr;
+	struct sockaddr_in server;
 	fd_set master;
 	fd_set read_fds;
-        char name[20];
-        printf("Enter Your Name: ");
-        gets(name);
 	
-	connect_request(&sockfd, &server_addr);
-        send(sockfd, name, strlen(name), 0);
-
+	connect_request(&sockfd, &server);
 	FD_ZERO(&master);
         FD_ZERO(&read_fds);
         FD_SET(0, &master);
@@ -82,4 +90,3 @@ int main()
 	close(sockfd);
 	return 0;
 }
-
