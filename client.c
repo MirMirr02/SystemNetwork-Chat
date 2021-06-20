@@ -13,8 +13,11 @@
 void send_recv(int i, int sockfd)
 {
 	char snd_buf[BUFSIZE];
-	char rcv_buf[BUFSIZE];
-	int nbyte_rcvd;
+	char recv_buf[BUFSIZE];
+	int  nbyte_recvd;
+
+	
+
 	
 	if (i == 0){
 		fgets(snd_buf, BUFSIZE, stdin);
@@ -25,12 +28,15 @@ void send_recv(int i, int sockfd)
 			exit(0);
 		}
 		else
-			send(sockfd, snd_buf, strlen(snd_buf), 0);
+            send(sockfd, snd_buf, strlen(snd_buf), 0);
+
+
+			
 	}
 	else {
-		nbyte_rcvd = recv(sockfd, rcv_buf, BUFSIZE, 0);
-		rcv_buf[nbyte_rcvd] = '\0';
-		printf("%s\n" , rcv_buf);
+		nbyte_recvd = recv(sockfd, recv_buf, BUFSIZE, 0);
+		recv_buf[nbyte_recvd] = '\0';
+		printf("%s" , recv_buf);
 		fflush(stdout);
 	}
 }
@@ -43,9 +49,8 @@ void connect_request(int *sockfd, struct sockaddr_in *servaddr)
 		exit(1);
 	}
 		printf("Socket created...\n");
-	
 	servaddr->sin_family = AF_INET;
-	servaddr->sin_port = htons(8080);
+	servaddr->sin_port = htons(4950);
 	servaddr->sin_addr.s_addr = inet_addr("127.0.0.1");
 	memset(servaddr->sin_zero, '\0', sizeof servaddr->sin_zero);
 	
@@ -60,6 +65,7 @@ void connect_request(int *sockfd, struct sockaddr_in *servaddr)
 		printf("---------------------------------------\n");
 		printf("   ***WELCOME TO THIS CHATROOM***   \n");
 		printf("\n");
+
 }
 int main()
 {
@@ -67,8 +73,13 @@ int main()
 	struct sockaddr_in server;
 	fd_set master;
 	fd_set read_fds;
+    char name[20];
+    printf("Enter your name: ");
+    gets(name);
 	
 	connect_request(&sockfd, &server);
+	send(sockfd, name, strlen(name), 0);
+
 	FD_ZERO(&master);
         FD_ZERO(&read_fds);
         FD_SET(0, &master);
