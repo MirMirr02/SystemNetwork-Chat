@@ -41,6 +41,9 @@ void send_recv(int i, int sockfd)
 	}
 }
 
+
+
+
 void connect_request(int *sockfd, struct sockaddr_in *servaddr)
 {
 	if ((*sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
