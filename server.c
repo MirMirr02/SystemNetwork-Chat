@@ -139,23 +139,14 @@ void connection_client_accept(fd_set *master, int *fdmax, int sockfd, struct soc
                 memset(name, 0, sizeof(name));
                 int n = recv(newsockfd, name, 20, 0);
                 name[n] = '\0';
-<<<<<<< HEAD
                 printf("%s : is now connected on port %d\n", name, ntohs(client_addr->sin_port));
                 //%s to show connected user names//
-=======
-                printf("%s is now connected\n", name);
-                //puts(name);
->>>>>>> 5b42a69aeb9f61179365d750a9b9f56de0265b76
                 
 
                 //Shows connected user in client//
                 memset(message, 0, sizeof(message));
                 strcat(message, name);
-<<<<<<< HEAD
                 strcat(message, " is now connected\n");
-=======
-                strcat(message, " is now enter the chatroom\n");
->>>>>>> 5b42a69aeb9f61179365d750a9b9f56de0265b76
                 for(m=0; m<11; m++){
                     if(arr[m] != NULL && arr[m]->status)
                         if(send(arr[m]->sockfd, message, sizeof(message), 0) == -1)
