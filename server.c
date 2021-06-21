@@ -44,7 +44,7 @@ void send_recv(int i, fd_set *master, int sockfd, int fdmax)
                                 
                                 memset(message, 0, sizeof(message));
                                 strcat(message, arr[j]->name);
-                                strcat(message, " disconnected from server");
+                                strcat(message, " disconnected from the chatroom\n");
                                 for(m=0; m<11; m++){
                                     if(arr[m] != NULL && arr[m]->sockfd != i && arr[m]->status)//arr[m] != NULL && arr[m]->status && arr[m]->sockfd != sockfd){
                                         if(send(arr[m]->sockfd, message, sizeof(message), 0) == -1)
@@ -120,12 +120,12 @@ void connection_accept(fd_set *master, int *fdmax, int sockfd, struct sockaddr_i
                 memset(name, 0, sizeof(name));
                 int n = recv(newsockfd, name, 20, 0);
                 name[n] = '\0';
-                printf("%s : is now connected\n", name);
+                printf("%s is now connected\n", name);
                 //puts(name);
                 
                 memset(message, 0, sizeof(message));
                 strcat(message, name);
-                strcat(message, " is now connected");
+                strcat(message, " is now enter the chatroom\n");
                 for(m=0; m<11; m++){
                     if(arr[m] != NULL && arr[m]->status)//arr[m] != NULL && arr[m]->status && arr[m]->sockfd != sockfd){ && arr[m]->sockfd != i 
                         if(send(arr[m]->sockfd, message, sizeof(message), 0) == -1)
@@ -168,7 +168,7 @@ void connect_request(int *sockfd, struct sockaddr_in *addr)
 		
 	if ((*sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{
-		perror("Socket creation failed");
+		perror("Socket creation failed\n");
 		exit(1);
 	}
 		printf("Socket created...\n");

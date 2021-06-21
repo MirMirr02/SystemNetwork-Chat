@@ -45,7 +45,7 @@ void connect_request(int *sockfd, struct sockaddr_in *servaddr)
 {
 	if ((*sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{
-		perror("Socket creation failed");
+		printf("Socket creation failed");
 		exit(1);
 	}
 		printf("Socket created...\n");
@@ -73,12 +73,13 @@ int main()
 	struct sockaddr_in server;
 	fd_set master;
 	fd_set read_fds;
-    char name[20];
-    printf("Enter your name: ");
-    gets(name);
+	char name[20];
 	
 	connect_request(&sockfd, &server);
-	send(sockfd, name, strlen(name), 0);
+		      
+        printf("Enter your name: ");
+        gets(name);
+	send(sockfd, name, strlen(name), 0);  
 
 	FD_ZERO(&master);
         FD_ZERO(&read_fds);
